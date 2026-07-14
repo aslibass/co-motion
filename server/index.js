@@ -21,6 +21,11 @@ const app = express();
 app.use(express.json({ limit: "1mb" }));
 app.use(express.static(join(__dirname, "../public")));
 
+// The tool lives at /app; the landing page is the static index.html at /. Without this
+// route, express.static only serves it at /app.html — and the landing page's only call
+// to action points at /app.
+app.get("/app", (req, res) => res.sendFile(join(__dirname, "../public/app.html")));
+
 // The deployed app is public and /api/ask spends real money on a personal API key.
 // Gate that endpoint and only that one — browsing the library, the red-flag rail and
 // the questions list all stay open, so a fumbled code can never dead-end a patient (or
